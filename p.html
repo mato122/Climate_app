@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="Styles.css" type="text/css">
+    <script src="Script.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen&display=swap" rel="stylesheet">
+</head>
+<body onload = "onLoad()">
+    <div class=e2_4 id="container">
+    <div class="e3_8"></div>
+    <div class="e3_92"></div>
+    <div class="e3_9"></div>
+    <div class="e3_7"></div>
+    <div class="e3_94"></div>
+    <div class="e3_12"></div>
+    <div class="e3_96"></div>
+    <div class="e3_13"></div>
+    <div class="e3_95"></div>
+    <div class="e3_14"></div>
+    <div class="e3_15"></div>
+    <div class="e3_100"></div>
+    <div class="e3_98"></div>
+    <div class="e3_103"></div>
+    <div class="img" ><img src="" alt="" class="img" id="IconAnime"></div>
+    <div class="img1" ><img src="puppy ears.png" class="img1"></div>
+    <div class="img2" ><img src="paw.png" class="img2"></div>
+    <div class="img3" ><img src="images.png" class="img3"></div>
+    <div class="e3_99"></div><span  class="e3_184" id="temperature"></span><span  class="e3_185" id="description"></span><h3 class="text1">Pressure</h3><span  class="e4_189" id="pressure"></span><h3 class="text2">Day</h3><span  class="e4_190" id="date"></span><span  class="e11_4" id="location"></span>
+    <div class="e3_186"></div>
+    <div class="e23_2"></div>
+  </div>
+  <div class="sk-cube-grid" id="loader">
+    <div class="sk-cube sk-cube1"></div>
+    <div class="sk-cube sk-cube2"></div>
+    <div class="sk-cube sk-cube3"></div>
+    <div class="sk-cube sk-cube4"></div>
+    <div class="sk-cube sk-cube5"></div>
+    <div class="sk-cube sk-cube6"></div>
+    <div class="sk-cube sk-cube7"></div>
+    <div class="sk-cube sk-cube8"></div>
+    <div class="sk-cube sk-cube9"></div>
+  </div>
+</body>
+
+<script> const APP_ID = "ff91917f9a4e4dd9f49a86d3756c82a2"
+
+  const fetchData = position => {
+      const { latitude, longitude } = position.coords;
+      fetch(`http://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${APP_ID}`)
+          .then(response => response.json())
+          .then(data => setWeatherData(data));
+  }
+
+  const setWeatherData = data => {
+      const weatherData = {
+          temperature: Math.floor(data.main.temp) + "°C",
+          description: data.weather[0].main,
+          pressure: data.main.pressure + "Pa",
+          location: data.name,
+          date: getDate(),
+
+      }
+
+   console.log(data.weather[0].main)
+          switch (data.weather[0].main) {
+              case 'Thunderstorm':
+                IconAnime.src='animated/thunder.png'
+                console.log('Storm');
+                break;
+              case 'Drizzle':
+                  IconAnime.src='animated/rainy-2.png'
+                console.log('drizzle');
+                break;
+              case 'Rain':
+                  IconAnime.src='animated/rainy-7.png'
+                console.log('rain');
+                break;
+              case 'Snow':
+                  IconAnime.src='animated/snowy-6.png'
+                  console.log('snow');
+                break;
+              case 'Clear':
+                  IconAnime.src='animated/day.png'
+                  console.log('clear');
+                break;
+              case 'Clouds':
+                  IconAnime.src='animated/cloudy-day-1.png'
+                  console.log('cloudy');
+                  break;
+            }
+      Object.keys(weatherData).forEach( key => {
+          setTextContent(key, weatherData[key]);
+      });
+
+      cleanUp();
+  }
+
+  const cleanUp = () => {
+      let container = document.getElementById('container');
+      let loader = document.getElementById('loader');
+
+      loader.style.display = 'none';
+      container.style.display = 'flex';
+  }
+
+  const getDate = () => {
+      let date = new Date();
+      return `${date.getDate()}-${ ('0' + (date.getMonth() + 1)).slice(-2)}-${date.getFullYear()}`;
+  }
+
+  const setTextContent = (element, text) => {
+      document.getElementById(element).textContent = text;
+  }
+
+  const onLoad = () => {
+      navigator.geolocation.getCurrentPosition(fetchData)
+  }</script>
+
+</html>
